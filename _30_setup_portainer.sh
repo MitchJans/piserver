@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source script-utils.sh
+source _00_script_utils.sh
 
 check_internet
 
