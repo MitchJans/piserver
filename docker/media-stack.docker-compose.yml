@@ -45,23 +45,23 @@ services:
       # - /media/downloads/watch:/downloads  # transmission watch directory
 
   # https://github.com/linuxserver/docker-radarr
-  # radarr:
-  #   image: linuxserver/radarr:latest
-  #   container_name: radarr
-  #   depends_on:
-  #     - transmission
-  #     - prowlarr
-  #   restart: always
-  #   ports:
-  #     - "7878:7878"
-  #   environment:
-  #     - PGID=1000
-  #     - PUID=1000
-  #     - TZ=Europe/Brussels
-  #   volumes:
-  #     - /media/cfg/radarr:/config
-  #     - /media/nas/movies:/movies
-  #     - /media/nas/downloads/completed:/downloads
+  radarr:
+    image: linuxserver/radarr:latest
+    container_name: radarr
+    depends_on:
+      - transmission
+      - prowlarr
+    restart: always
+    ports:
+      - "7878:7878"
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /media/cfg/radarr:/config
+      - /media/nas/movies:/movies
+      - /media/nas/downloads/complete:/downloads
   
 
   # # https://github.com/linuxserver/docker-sonarr
