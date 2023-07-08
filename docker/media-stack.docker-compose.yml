@@ -18,7 +18,7 @@ services:
       - DOCKER_MODS=linuxserver/mods:transmission-floodui
     volumes:
       - /media/cfg/transmission:/config
-      - /media/downloads:/downloads
+      - /media/nas/downloads:/downloads
     ports:
       - 9091:9091
       - 51413:51413
