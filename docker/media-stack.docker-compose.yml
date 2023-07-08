@@ -2,7 +2,46 @@
 version: "3.8"
 
 services:
-  # # https://github.com/linuxserver/docker-radarr
+  transmission:
+    image: linuxserver/transmission
+    container_name: transmission
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+      - TRANSMISSION_WEB_HOME= #optional
+      - USER=admin #optional
+      - PASS= #optional
+      - WHITELIST= #optional
+      - PEERPORT= #optional
+      - HOST_WHITELIST= #optional
+    volumes:
+      - /media/transmission_cfg:/config
+      - /media/downloads:/downloads
+    ports:
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
+    restart: unless-stopped
+
+      # https://github.com/linuxserver/docker-prowlarr
+  prowlarr:
+    image: linuxserver/prowlarr:develop
+    container_name: prowlarr
+    restart: always
+    ports:
+      - "9696:9696"
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /media/prowlarr:/config
+      # - /media/downloads/watch:/downloads  # transmission watch directory
+
+  # https://github.com/linuxserver/docker-radarr
   # radarr:
   #   image: linuxserver/radarr:latest
   #   container_name: radarr
@@ -14,9 +53,10 @@ services:
   #     - PUID=1000
   #     - TZ=Europe/Brussels
   #   volumes:
-  #     - /media/radarr:/config
+  #     - /media/radarr_cfg:/config
   #     - /media/movies:/movies
   #     - /media/downloads/completed:/downloads
+  
 
   # # https://github.com/linuxserver/docker-sonarr
   # sonarr:
@@ -33,20 +73,3 @@ services:
   #     - /media/sonarr:/config
   #     - /media/tv:/tv
   #     - /media/downloads/completed:/downloads
-
-  # https://github.com/linuxserver/docker-prowlarr
-  prowlarr:
-    image: linuxserver/prowlarr:develop
-    container_name: prowlarr
-    restart: always
-    ports:
-      - "9696:9696"
-    cap_add:
-      - NET_ADMIN
-    environment:
-      - PGID=1000
-      - PUID=1000
-      - TZ=Europe/Brussels
-    volumes:
-      - /media/prowlarr:/config
-      # - /media/downloads/watch:/downloads  # transmission watch directory
