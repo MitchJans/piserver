@@ -51,7 +51,7 @@ services:
     depends_on:
       - transmission
       - prowlarr
-    restart: always
+    restart: unless-stopped
     ports:
       - "7878:7878"
     environment:
@@ -65,17 +65,20 @@ services:
   
 
   # # https://github.com/linuxserver/docker-sonarr
-  # sonarr:
-  #   image: linuxserver/sonarr:latest
-  #   container_name: sonarr
-  #   restart: always
-  #   ports:
-  #     - "8989:8989"
-  #   environment:
-  #     - PGID=1000
-  #     - PUID=1000
-  #     - TZ=Europe/Brussels
-  #   volumes:
-  #     - /media/cfg/sonarr:/config
-  #     - /media/tv:/tv
-  #     - /media/downloads/completed:/downloads
+  sonarr:
+    image: linuxserver/sonarr:latest
+    container_name: sonarr
+    depends_on:
+      - transmission
+      - prowlarr
+    restart: unless-stopped
+    ports:
+      - "8989:8989"
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /media/cfg/sonarr:/config
+      - /media/nas/tvshows:/tv
+      - /media/nas/downloads:/downloads
