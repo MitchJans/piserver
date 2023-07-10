@@ -93,6 +93,6 @@ services:
     volumes:
       - /media/cfg/heimdall:/config
     ports:
-      - 80:80
+      - 81:80
       - 443:443
     restart: unless-stopped
