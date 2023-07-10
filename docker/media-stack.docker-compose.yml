@@ -64,7 +64,7 @@ services:
       - /media/nas/downloads:/downloads
   
 
-  # # https://github.com/linuxserver/docker-sonarr
+  # https://github.com/linuxserver/docker-sonarr
   sonarr:
     image: linuxserver/sonarr:latest
     container_name: sonarr
@@ -82,3 +82,17 @@ services:
       - /media/cfg/sonarr:/config
       - /media/nas/tvshows:/tv
       - /media/nas/downloads:/downloads
+
+  heimdall:
+    image: linuxserver/heimdall:latest
+    container_name: heimdall
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /media/cfg/heimdall:/config
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
