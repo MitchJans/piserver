@@ -82,6 +82,29 @@ services:
       - /media/cfg/sonarr:/config
       - /media/nas/tvshows:/tv
       - /media/nas/downloads:/downloads
+  
+  overseerr:
+    image: sctx/overseerr:latest
+    container_name: overseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=TZ=Europe/Brussels
+      - PORT=7373
+    ports:
+      - 7373:7373
+    volumes:
+      - /media/cfg/overseerr:/app/config
+    restart: unless-stopped
+
+  # recyclarr:
+  #   image: ghcr.io/recyclarr/recyclarr
+  #   container_name: recyclarr
+  #   user: 1000:1000
+  #   # networks: [recyclarr]
+  #   volumes:
+  #     - /media/cfg/recyclarr:/config
+  #   environment:
+  #     - TZ=Europe/Brussels
 
   heimdall:
     image: linuxserver/heimdall:latest
