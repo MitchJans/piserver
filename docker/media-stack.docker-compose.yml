@@ -8,6 +8,9 @@ services:
     container_name: cloudflared
     command: tunnel --no-autoupdate run
     restart: unless-stopped
+    environment:
+      # Needs to be set in env file or on host (portainer)
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
     depends_on:
       # TODO add rest of services?
       - radarr
