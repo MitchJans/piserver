@@ -2,18 +2,19 @@
 version: "3.8"
 
 services:
+  ## Tunnel on Cloudlfare Zero Trust deleted, not used anymore
   # cloudflared tunnel for exposing service to the webs
-  tunnel:
-    image: cloudflare/cloudflared:latest
-    container_name: cloudflared
-    command: tunnel --no-autoupdate run
-    restart: unless-stopped
-    environment:
-      # Needs to be set in env file or on host (portainer)
-      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
-    depends_on:
-      # TODO add rest of services?
-      - radarr
+  # tunnel:
+  #   image: cloudflare/cloudflared:latest
+  #   container_name: cloudflared
+  #   command: tunnel --no-autoupdate run
+  #   restart: unless-stopped
+  #   environment:
+  #     # Needs to be set in env file or on host (portainer)
+  #     - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+  #   depends_on:
+  #     # TODO add rest of services?
+  #     - radarr
 
   transmission:
     image: linuxserver/transmission
