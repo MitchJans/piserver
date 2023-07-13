@@ -2,6 +2,16 @@
 version: "3.8"
 
 services:
+  # cloudflared tunnel for exposing service to the webs
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudlfared
+    command: tunnel --no-autoupdate run
+    restart: unless-stopped
+    depends_on:
+      # TODO add rest of services?
+      - radarr
+
   transmission:
     image: linuxserver/transmission
     container_name: transmission
