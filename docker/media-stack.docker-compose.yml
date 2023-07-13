@@ -16,6 +16,21 @@ services:
   #     # TODO add rest of services?
   #     - radarr
 
+  mylar3:
+    image: lscr.io/linuxserver/mylar3:latest
+    container_name: mylar3
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /mnt/cfg/mylar3:/config
+      - /media/nas/comics:/comics
+      - /media/nas/downloads:/downloads
+    ports:
+      - 6868:8090
+    restart: unless-stopped
+
   transmission:
     image: linuxserver/transmission
     container_name: transmission
