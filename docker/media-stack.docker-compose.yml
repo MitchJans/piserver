@@ -5,7 +5,7 @@ services:
   # cloudflared tunnel for exposing service to the webs
   tunnel:
     image: cloudflare/cloudflared:latest
-    container_name: cloudlfared
+    container_name: cloudflared
     command: tunnel --no-autoupdate run
     restart: unless-stopped
     depends_on:
