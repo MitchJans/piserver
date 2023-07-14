@@ -31,20 +31,6 @@ services:
       - 6868:8090
     restart: unless-stopped
 
-  yacreaderlibrary-server-docker:
-    container_name: YACReaderLibraryServer
-    image: xthursdayx/yacreaderlibrary-server-docker:latest
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Brussels
-    volumes:
-      - /media/cfg/yacreaderserver:/config
-      - /media/nas/comics:/comics
-    ports:
-      - 8585:8080
-    restart: unless-stopped
-
   transmission:
     image: linuxserver/transmission
     container_name: transmission
