@@ -16,6 +16,57 @@ services:
   #     # TODO add rest of services?
   #     - radarr
 
+  # https://www.linuxserver.io/blog/zero-trust-hosting-and-reverse-proxy-via-cloudflare-swag-and-authelia
+  # This service will be used to expose some other services to the web
+  # It will use cloudflare credentials to set up a zero trust tunnel and proxy requests
+  # to other services by their service name as subdomains of URL.
+  swag:
+    image: lscr.io/linuxserver/swag
+    container_name: swag
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+      - URL=infiniteh.dev
+      - VALIDATION=dns
+      - SUBDOMAINS=wildcard
+      - DNSPLUGIN=cloudflare
+      # MODS explanation
+      #  swag-auto-proxy: automatically discover local services and enable reverse proxies
+      #  universal-docker: installs docker-cli that is needed for auto-proxy's service discovery
+      #  universal-cloudflared: installs the cloudflared service within SWAG
+      - DOCKER_MODS=linuxserver/mods:swag-auto-proxy|linuxserver/mods:universal-docker|linuxserver/mods:universal-cloudflared
+      - DOCKER_HOST=dockerproxy
+      # Cloudflare credentials
+      - CF_ZONE_ID=${CF_ZONE_ID}
+      - CF_ACCOUNT_ID=${CF_ACCOUNT_ID}
+      - CF_API_TOKEN=${CF_API_TOKEN}
+      # This tunnel will be created by the cloudflared service within SWAG
+      - CF_TUNNEL_NAME=${CF_TUNNEL_NAME}
+      - CF_TUNNEL_PASSWORD=${CF_TUNNEL_PASSWORD}
+      # The file needs to be created on the host
+      - FILE__CF_TUNNEL_CONFIG=/config/tunnelconfig.yml
+    # extra_hosts: lsio-test.com:127.0.0.1: sets a dns hosts entry inside the container 
+    # for our domain so that inside the container our domain resolves to 127.0.0.1 and 
+    # the ssl cert remains valid
+    extra_hosts:
+      - lsio-test.com:127.0.0.1
+    volumes:
+      - /media/cfg/swag:/config
+    restart: unless-stopped
+
+  dockerproxy:
+    image: ghcr.io/tecnativa/docker-socket-proxy
+    container_name: dockerproxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - CONTAINERS=1
+      - POST=0
+    restart: unless-stopped
+
   mylar3:
     image: lscr.io/linuxserver/mylar3:latest
     container_name: mylar3
@@ -91,7 +142,8 @@ services:
       - /media/cfg/radarr:/config
       - /media/nas/movies:/movies
       - /media/nas/downloads:/downloads
-  
+    labels:
+      - swag=enable
 
   # https://github.com/linuxserver/docker-sonarr
   sonarr:
