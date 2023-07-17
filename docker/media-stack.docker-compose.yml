@@ -48,6 +48,8 @@ services:
       - CF_TUNNEL_PASSWORD=${CF_TUNNEL_PASSWORD}
       # The file needs to be created on the host
       - FILE__CF_TUNNEL_CONFIG=/config/tunnelconfig.yml
+      # Whether or not to use the letsencrypt staging environment
+      - STAGING=${SWAG_USE_STAGING}
     # extra_hosts: lsio-test.com:127.0.0.1: sets a dns hosts entry inside the container 
     # for our domain so that inside the container our domain resolves to 127.0.0.1 and 
     # the ssl cert remains valid
