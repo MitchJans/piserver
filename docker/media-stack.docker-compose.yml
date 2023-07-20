@@ -2,6 +2,123 @@
 version: "3.8"
 
 services:
+
+  mylar3:
+    image: lscr.io/linuxserver/mylar3:latest
+    container_name: mylar3
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /mnt/cfg/mylar3:/config
+      - /media/nas/comics:/comics
+      - /media/nas/downloads:/downloads
+    ports:
+      - 6868:8090
+    restart: unless-stopped
+
+  transmission:
+    image: linuxserver/transmission
+    container_name: transmission
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+      - TRANSMISSION_WEB_HOME= #optional
+      - USER=admin #optional
+      - PASS= #optional
+      - WHITELIST= #optional
+      - PEERPORT= #optional
+      - HOST_WHITELIST= #optional
+      - DOCKER_MODS=linuxserver/mods:transmission-floodui
+    volumes:
+      - /media/cfg/transmission:/config
+      - /media/nas/downloads:/downloads
+    ports:
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
+    restart: unless-stopped
+
+  # https://github.com/linuxserver/docker-prowlarr
+  prowlarr:
+    image: linuxserver/prowlarr:latest
+    container_name: prowlarr
+    depends_on:
+      - transmission
+    restart: unless-stopped
+    ports:
+      - "9696:9696"
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /media/cfg/prowlarr:/config
+      # - /media/downloads/watch:/downloads  # transmission watch directory
+
+  # https://github.com/linuxserver/docker-radarr
+  radarr:
+    image: linuxserver/radarr:latest
+    container_name: radarr
+    depends_on:
+      - transmission
+      - prowlarr
+    restart: unless-stopped
+    ports:
+      - "7878:7878"
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /media/cfg/radarr:/config
+      - /media/nas/movies:/movies
+      - /media/nas/downloads:/downloads
+    labels:
+      - swag=enable
+
+  # https://github.com/linuxserver/docker-sonarr
+  sonarr:
+    image: linuxserver/sonarr:latest
+    container_name: sonarr
+    depends_on:
+      - transmission
+      - prowlarr
+    restart: unless-stopped
+    ports:
+      - "8989:8989"
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /media/cfg/sonarr:/config
+      - /media/nas/tvshows:/tv
+      - /media/nas/downloads:/downloads
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    depends_on:
+      - transmission
+      - prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /media/cfg/lidarr:/config
+      - /media/nas/music:/music
+      - /media/nas/downloads:/downloads
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+
+
   ## Tunnel on Cloudlfare Zero Trust deleted, not used anymore
   # cloudflared tunnel for exposing service to the webs
   # tunnel:
@@ -69,100 +186,3 @@ services:
   #     - CONTAINERS=1
   #     - POST=0
   #   restart: unless-stopped
-
-  mylar3:
-    image: lscr.io/linuxserver/mylar3:latest
-    container_name: mylar3
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Brussels
-    volumes:
-      - /mnt/cfg/mylar3:/config
-      - /media/nas/comics:/comics
-      - /media/nas/downloads:/downloads
-    ports:
-      - 6868:8090
-    restart: unless-stopped
-
-  transmission:
-    image: linuxserver/transmission
-    container_name: transmission
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Brussels
-      - TRANSMISSION_WEB_HOME= #optional
-      - USER=admin #optional
-      - PASS= #optional
-      - WHITELIST= #optional
-      - PEERPORT= #optional
-      - HOST_WHITELIST= #optional
-      - DOCKER_MODS=linuxserver/mods:transmission-floodui
-    volumes:
-      - /media/cfg/transmission:/config
-      - /media/nas/downloads:/downloads
-    ports:
-      - 9091:9091
-      - 51413:51413
-      - 51413:51413/udp
-    restart: unless-stopped
-
-      # https://github.com/linuxserver/docker-prowlarr
-  prowlarr:
-    image: linuxserver/prowlarr:latest
-    container_name: prowlarr
-    depends_on:
-      - transmission
-    restart: unless-stopped
-    ports:
-      - "9696:9696"
-    cap_add:
-      - NET_ADMIN
-    environment:
-      - PGID=1000
-      - PUID=1000
-      - TZ=Europe/Brussels
-    volumes:
-      - /media/cfg/prowlarr:/config
-      # - /media/downloads/watch:/downloads  # transmission watch directory
-
-  # https://github.com/linuxserver/docker-radarr
-  radarr:
-    image: linuxserver/radarr:latest
-    container_name: radarr
-    depends_on:
-      - transmission
-      - prowlarr
-    restart: unless-stopped
-    ports:
-      - "7878:7878"
-    environment:
-      - PGID=1000
-      - PUID=1000
-      - TZ=Europe/Brussels
-    volumes:
-      - /media/cfg/radarr:/config
-      - /media/nas/movies:/movies
-      - /media/nas/downloads:/downloads
-    labels:
-      - swag=enable
-
-  # https://github.com/linuxserver/docker-sonarr
-  sonarr:
-    image: linuxserver/sonarr:latest
-    container_name: sonarr
-    depends_on:
-      - transmission
-      - prowlarr
-    restart: unless-stopped
-    ports:
-      - "8989:8989"
-    environment:
-      - PGID=1000
-      - PUID=1000
-      - TZ=Europe/Brussels
-    volumes:
-      - /media/cfg/sonarr:/config
-      - /media/nas/tvshows:/tv
-      - /media/nas/downloads:/downloads
