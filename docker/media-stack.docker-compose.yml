@@ -59,7 +59,6 @@ services:
       - TZ=Europe/Brussels
     volumes:
       - /media/cfg/prowlarr:/config
-      # - /media/downloads/watch:/downloads  # transmission watch directory
 
   # https://docs.linuxserver.io/images/docker-radarr
   radarr:
@@ -101,6 +100,7 @@ services:
       # data directory
       - /media/nas:/media
 
+  # https://docs.linuxserver.io/images/docker-lidarr
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
     container_name: lidarr
@@ -112,9 +112,9 @@ services:
       - PGID=1000
       - TZ=Europe/Brussels
     volumes:
+      # Lidarr's internal config (and backups)
       - /media/cfg/lidarr:/config
-      - /media/nas/music:/music
-      - /media/nas/downloads:/downloads
+      - /media/nas:/media
     ports:
       - 8686:8686
     restart: unless-stopped
