@@ -18,6 +18,7 @@ services:
       - 6868:8090
     restart: unless-stopped
 
+  # https://docs.linuxserver.io/images/docker-transmission
   transmission:
     image: linuxserver/transmission
     container_name: transmission
@@ -95,9 +96,10 @@ services:
       - PUID=1000
       - TZ=Europe/Brussels
     volumes:
+      # Sonarr's internal config (and backups)
       - /media/cfg/sonarr:/config
-      - /media/nas/tvshows:/tv
-      - /media/nas/downloads:/downloads
+      # data directory
+      - /media/nas:/media
 
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
