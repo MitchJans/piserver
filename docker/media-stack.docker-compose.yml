@@ -3,21 +3,7 @@ version: "3.8"
 
 services:
 
-  # https://docs.linuxserver.io/images/docker-mylar3
-  mylar3:
-    image: lscr.io/linuxserver/mylar3:latest
-    container_name: mylar3
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Brussels
-    volumes:
-      - /media/cfg/mylar3:/config
-      - /media/nas:/media
-    ports:
-      - 6868:8090
-    restart: unless-stopped
-
+  # Download client
   # https://docs.linuxserver.io/images/docker-transmission
   transmission:
     image: linuxserver/transmission
@@ -42,6 +28,7 @@ services:
       - 51413:51413/udp
     restart: unless-stopped
 
+  # Indexer manager 
   # https://github.com/linuxserver/docker-prowlarr
   prowlarr:
     image: linuxserver/prowlarr:latest
@@ -60,6 +47,7 @@ services:
     volumes:
       - /media/cfg/prowlarr:/config
 
+  # Movies
   # https://docs.linuxserver.io/images/docker-radarr
   radarr:
     image: linuxserver/radarr:latest
@@ -80,6 +68,7 @@ services:
       # data directory
       - /media/nas:/media
 
+  # TV Shows
   # https://github.com/linuxserver/docker-sonarr
   sonarr:
     image: linuxserver/sonarr:latest
@@ -100,6 +89,27 @@ services:
       # data directory
       - /media/nas:/media
 
+  # Subtitles
+  # https://docs.linuxserver.io/images/docker-bazarr
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    depends_on:
+      - transmission
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      # Bazarr's internal config (and backups)
+      - /media/cfg/bazarr:/config
+      # data directory
+      - /media/nas:/media
+    ports:
+      - 6767:6767
+    restart: unless-stopped
+
+  # Music
   # https://docs.linuxserver.io/images/docker-lidarr
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
@@ -119,71 +129,18 @@ services:
       - 8686:8686
     restart: unless-stopped
 
-
-  ## Tunnel on Cloudlfare Zero Trust deleted, not used anymore
-  # cloudflared tunnel for exposing service to the webs
-  # tunnel:
-  #   image: cloudflare/cloudflared:latest
-  #   container_name: cloudflared
-  #   command: tunnel --no-autoupdate run
-  #   restart: unless-stopped
-  #   environment:
-  #     # Needs to be set in env file or on host (portainer)
-  #     - TUNNEL_TOKEN=${TUNNEL_TOKEN}
-  #   depends_on:
-  #     # TODO add rest of services?
-  #     - radarr
-
-  # https://www.linuxserver.io/blog/zero-trust-hosting-and-reverse-proxy-via-cloudflare-swag-and-authelia
-  # This service will be used to expose some other services to the web
-  # It will use cloudflare credentials to set up a zero trust tunnel and proxy requests
-  # to other services by their service name as subdomains of URL.
-  # swag:
-  #   image: lscr.io/linuxserver/swag
-  #   container_name: swag
-  #   cap_add:
-  #     - NET_ADMIN
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     - TZ=Europe/Brussels
-  #     - URL=infiniteh.dev
-  #     - VALIDATION=dns
-  #     - SUBDOMAINS=wildcard
-  #     - DNSPLUGIN=cloudflare
-  #     - EMAIL=${SWAG_EMAIL}
-  #     # MODS explanation
-  #     #  swag-auto-proxy: automatically discover local services and enable reverse proxies
-  #     #  universal-docker: installs docker-cli that is needed for auto-proxy's service discovery
-  #     #  universal-cloudflared: installs the cloudflared service within SWAG
-  #     - DOCKER_MODS=linuxserver/mods:swag-auto-proxy|linuxserver/mods:universal-docker|linuxserver/mods:universal-cloudflared
-  #     - DOCKER_HOST=dockerproxy
-  #     # Cloudflare credentials
-  #     - CF_ZONE_ID=${CF_ZONE_ID}
-  #     - CF_ACCOUNT_ID=${CF_ACCOUNT_ID}
-  #     - CF_API_TOKEN=${CF_API_TOKEN}
-  #     # This tunnel will be created by the cloudflared service within SWAG
-  #     - CF_TUNNEL_NAME=${CF_TUNNEL_NAME}
-  #     - CF_TUNNEL_PASSWORD=${CF_TUNNEL_PASSWORD}
-  #     # The file needs to be created on the host
-  #     - FILE__CF_TUNNEL_CONFIG=/config/tunnelconfig.yml
-  #     # Whether or not to use the letsencrypt staging environment
-  #     - STAGING=${SWAG_USE_STAGING}
-  #   # extra_hosts: infiniteh.dev:127.0.0.1: sets a dns hosts entry inside the container 
-  #   # for our domain so that inside the container our domain resolves to 127.0.0.1 and 
-  #   # the ssl cert remains valid
-  #   extra_hosts:
-  #     - infiniteh.dev:127.0.0.1
-  #   volumes:
-  #     - /media/cfg/swag:/config
-  #   restart: unless-stopped
-
-  # dockerproxy:
-  #   image: ghcr.io/tecnativa/docker-socket-proxy
-  #   container_name: dockerproxy
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #   environment:
-  #     - CONTAINERS=1
-  #     - POST=0
-  #   restart: unless-stopped
+  # Comics
+  # https://docs.linuxserver.io/images/docker-mylar3
+  mylar3:
+    image: lscr.io/linuxserver/mylar3:latest
+    container_name: mylar3
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /media/cfg/mylar3:/config
+      - /media/nas:/media
+    ports:
+      - 6868:8090
+    restart: unless-stopped
