@@ -3,6 +3,7 @@ version: "3.8"
 
 services:
 
+  # https://docs.linuxserver.io/images/docker-mylar3
   mylar3:
     image: lscr.io/linuxserver/mylar3:latest
     container_name: mylar3
@@ -11,9 +12,8 @@ services:
       - PGID=1000
       - TZ=Europe/Brussels
     volumes:
-      - /mnt/cfg/mylar3:/config
-      - /media/nas/comics:/comics
-      - /media/nas/downloads:/downloads
+      - /media/cfg/mylar3:/config
+      - /media/nas:/media
     ports:
       - 6868:8090
     restart: unless-stopped
