@@ -17,6 +17,7 @@ services:
       - DOCKER_MODS=linuxserver/mods:homeassistant-hacs
     volumes:
       - /media/cfg/homeassistant:/config
+      - /run/dbus:/run/dbus:ro
     ports:
       - 8484:8123
     # devices:
