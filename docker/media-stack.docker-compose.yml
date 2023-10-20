@@ -3,6 +3,24 @@ version: "3.8"
 
 services:
 
+  # home assistant
+  # https://docs.linuxserver.io/images/docker-homeassistant
+  homeassistant:
+    image: linuxserver/homeassistant:latest
+    container_name: homeassistant
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /media/cfg/homeassistant:/config
+    ports:
+      - 8484:8123
+    # devices:
+      # - /path/to/device:/path/to/device #optional
+    restart: unless-stopped
+
   # Download client
   # https://docs.linuxserver.io/images/docker-transmission
   transmission:
