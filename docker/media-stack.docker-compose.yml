@@ -154,15 +154,16 @@ services:
     restart: unless-stopped
 
   # https://recyclarr.dev/wiki/installation/docker/
-  recyclarr:
-    image: ghcr.io/recyclarr/recyclarr
-    container_name: recyclarr
-    user: 1000:1000
-    volumes:
-      - /media/cfg/recyclarr:/config
-    environment:
-      - TZ=Europe/Brussels
-      - RECYCLARR_CREATE_CONFIG=true
+  # TODO edit config in /media/cfg/recyclarr/recyclarr.yaml
+  # recyclarr:
+  #   image: ghcr.io/recyclarr/recyclarr
+  #   container_name: recyclarr
+  #   user: 1000:1000
+  #   volumes:
+  #     - /media/cfg/recyclarr:/config
+  #   environment:
+  #     - TZ=Europe/Brussels
+  #     - RECYCLARR_CREATE_CONFIG=true
 
   # Comics
   # https://docs.linuxserver.io/images/docker-mylar3
