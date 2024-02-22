@@ -92,10 +92,7 @@ services:
   # TV Shows
   # https://github.com/linuxserver/docker-sonarr
   sonarr:
-    # Stable, v3
-    # image: linuxserver/sonarr:latest
-    # beta, v4
-    image: linuxserver/sonarr:develop
+    image: linuxserver/sonarr:latest
     container_name: sonarr
     depends_on:
       - transmission
