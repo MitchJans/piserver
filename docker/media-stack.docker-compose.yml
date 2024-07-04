@@ -24,7 +24,22 @@ services:
       # - /path/to/device:/path/to/device #optional
     restart: unless-stopped
 
-  # Cloudflare portection bypasser
+  # Overseerr
+  overseerr:
+    image: linuxserver/overseerr:latest
+    container_name: overseerr
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Brussels
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /media/cfg/overseerr:/config
+      # - /media/nas:/media
+    ports:
+      - 5050:5050
+
+  # Cloudflare protection bypasser
   flaresolverr:
     # DockerHub mirror flaresolverr/flaresolverr:latest
     image: ghcr.io/flaresolverr/flaresolverr:latest
