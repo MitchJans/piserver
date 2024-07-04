@@ -37,7 +37,7 @@ services:
       - /media/cfg/overseerr:/config
       # - /media/nas:/media
     ports:
-      - 5050:5050
+      - 5050:5055
 
   # Cloudflare protection bypasser
   flaresolverr:
