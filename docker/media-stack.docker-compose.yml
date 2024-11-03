@@ -157,7 +157,7 @@ services:
       # data directory
       - /media/nas:/media
 
-   https://recyclarr.dev/wiki/installation/docker/
+  # https://recyclarr.dev/wiki/installation/docker/
   # TODO edit config in /media/cfg/recyclarr/recyclarr.yaml
   # automatically synchronize recommended settings from the TRaSH guides to sonarr/radarr
   recyclarr:
