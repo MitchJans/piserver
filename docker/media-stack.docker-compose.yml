@@ -157,6 +157,19 @@ services:
       # data directory
       - /media/nas:/media
 
+   https://recyclarr.dev/wiki/installation/docker/
+  # TODO edit config in /media/cfg/recyclarr/recyclarr.yaml
+  # automatically synchronize recommended settings from the TRaSH guides to sonarr/radarr
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr
+    container_name: recyclarr
+    user: 1000:1000
+    volumes:
+      - /media/cfg/recyclarr:/config
+    environment:
+      - TZ=Europe/Brussels
+      - RECYCLARR_CREATE_CONFIG=true
+
   # Subtitles
   # https://docs.linuxserver.io/images/docker-bazarr
   bazarr:
@@ -196,18 +209,6 @@ services:
   #   ports:
   #     - 8686:8686
   #   restart: unless-stopped
-
-  # https://recyclarr.dev/wiki/installation/docker/
-  # TODO edit config in /media/cfg/recyclarr/recyclarr.yaml
-  # recyclarr:
-  #   image: ghcr.io/recyclarr/recyclarr
-  #   container_name: recyclarr
-  #   user: 1000:1000
-  #   volumes:
-  #     - /media/cfg/recyclarr:/config
-  #   environment:
-  #     - TZ=Europe/Brussels
-  #     - RECYCLARR_CREATE_CONFIG=true
 
   # Comics
   # https://docs.linuxserver.io/images/docker-mylar3
