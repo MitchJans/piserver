@@ -160,15 +160,15 @@ services:
   # https://recyclarr.dev/wiki/installation/docker/
   # TODO edit config in /media/cfg/recyclarr/recyclarr.yaml
   # automatically synchronize recommended settings from the TRaSH guides to sonarr/radarr
-  recyclarr:
-    image: ghcr.io/recyclarr/recyclarr
-    container_name: recyclarr
-    user: 1000:1000
-    volumes:
-      - /media/cfg/recyclarr:/config
-    environment:
-      - TZ=Europe/Brussels
-      - RECYCLARR_CREATE_CONFIG=true
+  # recyclarr:
+  #   image: ghcr.io/recyclarr/recyclarr
+  #   container_name: recyclarr
+  #   user: 1000:1000
+  #   volumes:
+  #     - /media/cfg/recyclarr:/config
+  #   environment:
+  #     - TZ=Europe/Brussels
+  #     - RECYCLARR_CREATE_CONFIG=true
 
   # Subtitles
   # https://docs.linuxserver.io/images/docker-bazarr
